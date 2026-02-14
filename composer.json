@@ -1,19 +1,29 @@
 {
     "name": "momik/laravel-google-sheet-i18n",
-    "description": "Translate Laravel language files using Google Sheets",
+    "description": "Generate and update Laravel language files using Google Sheets with auto-translation formulas.",
+    "keywords": [
+        "laravel",
+        "i18n",
+        "translation",
+        "google-sheets",
+        "localization",
+        "language"
+    ],
+    "homepage": "https://github.com/PG-Momik/laravel-google-sheet-i18n",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Momik Shrestha",
-            "email": "momik.shrestha@gmail.com"
+            "email": "momik.shrestha@gmail.com",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.0",
         "google/apiclient": "^2.12.0",
-        "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
-        "illuminate/console": "^8.0|^9.0|^10.0|^11.0"
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/console": "^8.0|^9.0|^10.0|^11.0|^12.0"
     },
     "autoload": {
         "psr-4": {

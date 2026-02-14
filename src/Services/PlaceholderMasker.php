@@ -1,3 +1,5 @@
+<?php
+
 declare(strict_types=1);
 
 namespace LaravelGoogleSheetI18n\Services;
@@ -18,9 +20,9 @@ class PlaceholderMasker
     public function mask(string $text): array
     {
         $placeholders = [];
-        $callback = function ($matches) use (&$placeholders) {
-            $index = count($placeholders);
-            $token = "[[T_{$index}]]";
+        $callback     = function ($matches) use (&$placeholders) {
+            $index          = count($placeholders);
+            $token          = "[[T_{$index}]]";
             $placeholders[] = $matches[0]; // Store original :name
             return $token;
         };
@@ -29,7 +31,7 @@ class PlaceholderMasker
 
         // preg_replace_callback can return null on error, though unlikely here with basic string input
         return [
-            'masked_text' => (string)$maskedText,
+            'masked_text'  => (string)$maskedText,
             'placeholders' => $placeholders,
         ];
     }
@@ -46,7 +48,7 @@ class PlaceholderMasker
         foreach ($originalPlaceholders as $index => $originalPlaceholder) {
             // Use specific replacement to avoid replacing unintended parts
             // We look for the exact token [[T_N]]
-            
+
             // Should be case-insensitive just in case translation messed with casing, 
             // though usually brackets survive ok. String replace is safer.
             // However, Google Translate might add spaces like [[ T_0 ]] or [[T_0]].

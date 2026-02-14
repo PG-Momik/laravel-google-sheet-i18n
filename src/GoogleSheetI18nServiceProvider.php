@@ -16,15 +16,28 @@ class GoogleSheetI18nServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Load routes
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+
+        // Load views
+        $this->loadViewsFrom(__DIR__ . '/../resources/views/translation-manager', 'translation-manager');
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/google-sheet-i18n.php' => config_path('google-sheet-i18n.php'),
             ], 'config');
 
-            $this->commands([
-                TranslateCommand::class,
-            ]);
+            // Publish views
+            $this->publishes([
+                __DIR__ . '/../resources/views/translation-manager' => resource_path('views/vendor/translation-manager'),
+            ], 'views');
         }
+
+        // Register commands in all environments so they can be called via Artisan::call() in controllers
+        $this->commands([
+            TranslateCommand::class,
+            \LaravelGoogleSheetI18n\Console\Commands\InstallCommand::class,
+        ]);
     }
 
     /**
