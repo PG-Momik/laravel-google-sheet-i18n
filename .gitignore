@@ -8,3 +8,6 @@
 composer.lock
 phpunit.xml
 /coverage
+/site/node_modules
+/site/dist
+/site/.wrangler

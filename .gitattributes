@@ -1,0 +1,3 @@
+# Keep the docs site out of `composer require` downloads.
+/site export-ignore
+/.github export-ignore

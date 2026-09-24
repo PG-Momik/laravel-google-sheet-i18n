@@ -1,0 +1,19 @@
+{
+  "name": "laravel-google-sheet-i18n-docs",
+  "private": true,
+  "type": "module",
+  "description": "Builds the docs site (sheet-i18n.momik.dev) from ../docs/*.md",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && wrangler dev --port 8791",
+    "deploy": "node build.mjs && wrangler deploy"
+  },
+  "dependencies": {
+    "marked": "^18.0.14",
+    "sharp": "^0.35.4",
+    "shiki": "^4.4.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.86.0"
+  }
+}
