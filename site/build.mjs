@@ -201,7 +201,7 @@ function layout({ page, title, description, html, headings }) {
     ${pager}
     <footer class="footer">
       <a href="${REPO_URL}/edit/main/docs/${page.file}" target="_blank" rel="noopener">Edit this page on GitHub</a>
-      <span>MIT licensed · by <a href="https://momik.dev" target="_blank" rel="noopener">Momik Shrestha</a></span>
+      <span>&copy; 2026 <a href="https://momik.dev" target="_blank" rel="noopener">Momik Shrestha</a>. Built with purpose.</span>
     </footer>
   </main>
   ${toc}
