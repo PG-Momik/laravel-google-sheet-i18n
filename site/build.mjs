@@ -181,6 +181,15 @@ function layout({ page, title, description, html, headings }) {
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${SITE_URL}${pageUrl(page.slug)}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Laravel Google Sheets I18n">
+<meta property="og:image" content="${SITE_URL}/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sheet I18n for Laravel: your language files, built in a spreadsheet.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(fullTitle)}">
+<meta name="twitter:description" content="${escapeHtml(description)}">
+<meta name="twitter:image" content="${SITE_URL}/og.png">
 <meta name="theme-color" content="#0f172a">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/style.css">
