@@ -1,0 +1,594 @@
+/*
+  Landing page only (/). Inherits the docs tokens from style.css and adds the marketing shell.
+
+  The idea the page is built on: a spreadsheet is a grid of labelled rows, so the page is too. A
+  narrow mono label column on the left, content on the right, hairline rules between rows, and no
+  centred headings anywhere. Structure is square (radius 0); only controls are rounded.
+
+  Radius scale, applied everywhere: panels and grid structure 0, buttons and inputs 6px, chips pill.
+*/
+
+.landing {
+  --gut: 168px;          /* the index rail, sitting where a row header would */
+  --rule: 1px solid var(--border);
+  --ink-dim: color-mix(in srgb, var(--text) 62%, var(--bg));
+  --tex: rgb(0 0 0 / 0.045);
+  --noise-opacity: 0.28;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.landing section { scroll-margin-top: calc(var(--topbar-h) + 16px); }
+
+/* Fixed texture behind the page, the same treatment as momik.dev: a perspective grid and a
+   fractal-noise wash. Both sit behind everything and never take pointer events. */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.atmosphere .grid {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image:
+    linear-gradient(var(--tex) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tex) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transform: perspective(520px) rotateX(60deg);
+  opacity: 0.55;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .landing { --tex: rgb(255 255 255 / 0.035); --noise-opacity: 0.4; }
+}
+:root[data-theme="dark"] .landing { --tex: rgb(255 255 255 / 0.035); --noise-opacity: 0.4; }
+
+.atmosphere .noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+}
+
+.row {
+  padding: 68px 0;
+  border-top: var(--rule);
+  min-width: 0;
+}
+/* The demo breaks out of the rail: the sheet wants every pixel it can get. */
+.row.full { padding-top: 60px; }
+
+/* Hero full width, then a sticky index beside the stacked sections. */
+.shell2 {
+  display: grid;
+  grid-template-columns: var(--gut) minmax(0, 1fr);
+  gap: 0 44px;
+}
+.stack { min-width: 0; }
+
+.index {
+  position: sticky;
+  top: calc(var(--topbar-h) + 68px);
+  align-self: start;
+  padding-top: 68px;
+}
+.index ul { list-style: none; margin: 0; padding: 0; }
+.index a {
+  display: block;
+  padding: 5px 0;
+  font: 500 11.5px/1.6 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 12px;
+  margin-left: -14px;
+}
+.index a:hover { color: var(--text); }
+.index a.active { color: var(--accent-strong); border-left-color: var(--accent); }
+
+.landing h2 {
+  max-width: 22ch;
+  margin: 0 0 14px;
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+  line-height: 1.12;
+  letter-spacing: -0.028em;
+}
+.landing .say {
+  max-width: 58ch;
+  margin: 0 0 32px;
+  color: var(--ink-dim);
+  font-size: 1.02rem;
+}
+.landing .say:last-child { margin-bottom: 0; }
+
+/* ---------------------------------------------------------------- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: 56px;
+  padding: 76px 0 84px;
+}
+
+.hero h1 {
+  max-width: 21ch;
+  margin: 0 0 22px;
+  font-size: clamp(2.2rem, 4.2vw, 3.05rem);
+  line-height: 1.02;
+  letter-spacing: -0.042em;
+}
+.hero h1 b { font-weight: inherit; color: var(--accent-strong); }
+
+.hero .say {
+  max-width: 46ch;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+.hero .say code {
+  font: 0.87em var(--mono);
+  color: var(--text);
+  background: var(--bg-soft);
+  border: var(--rule);
+  padding: 0.08em 0.34em;
+}
+
+.cta { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.install {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 5px 0 14px;
+  background: var(--bg-soft);
+  border: var(--rule);
+  border-radius: 6px;
+  font: 13px var(--mono);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.install:hover { border-color: var(--accent); color: var(--text); }
+.install .prompt { color: var(--muted); user-select: none; }
+.install .copy-hint {
+  min-width: 56px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  background: var(--bg);
+  border: var(--rule);
+  font: 11.5px var(--font);
+  color: var(--muted);
+  text-align: center;
+}
+.install.copied .copy-hint { color: var(--accent-strong); border-color: var(--accent); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14.5px;
+  text-decoration: none;
+  transition: transform 0.12s, background 0.15s, border-color 0.15s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--accent-strong); color: #fff; }
+.btn-primary:hover { background: var(--accent); }
+.btn-ghost { border-color: var(--border); color: var(--text); background: var(--bg); }
+.btn-ghost:hover { border-color: var(--accent); }
+
+/* The hero visual: one real string, and the same string in four locales. The point of the product
+   in one object, and the placeholder claim visible in every row. */
+.fanout { border: var(--rule); background: var(--bg); }
+.fanout .src, .fanout .dst {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 14px;
+  padding: 13px 16px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.fanout .src {
+  background: var(--bg-soft);
+  border-bottom: var(--rule);
+}
+.fanout .dst + .dst { border-top: var(--rule); }
+.fanout .who {
+  font: 11.5px/1.6 var(--mono);
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.fanout .src .who { color: var(--text); }
+.fanout .dst .who { color: var(--accent-strong); text-transform: uppercase; }
+.fanout .file {
+  padding: 9px 16px;
+  border-bottom: var(--rule);
+  font: 11.5px var(--mono);
+  color: var(--muted);
+  background: var(--bg-soft);
+}
+
+/* Laravel placeholders, kept intact end to end. */
+.ph {
+  font: 0.92em var(--mono);
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  padding: 0.05em 0.3em;
+}
+
+/* ---------------------------------------------------------------- demo */
+
+/* The sheet pane sits one step above the page so it reads as a window, without punching a white
+   hole in a dark screen. The grid chrome below does the work of making it feel like a spreadsheet. */
+.sheet-pane { background: var(--bg); }
+.sheet-pane .sheet { background: var(--bg); }
+
+.demo-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  border: var(--rule);
+  background: var(--bg);
+}
+
+.pane { min-width: 0; display: flex; flex-direction: column; }
+.pane + .pane { border-left: var(--rule); }
+
+.pane-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 14px;
+  border-bottom: var(--rule);
+  background: var(--bg-soft);
+  font: 600 12px var(--mono);
+  letter-spacing: 0.03em;
+}
+.pane-head .sheet-name { font-weight: 400; color: var(--muted); margin-left: auto; }
+
+.formula-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  padding: 0 14px;
+  border-bottom: var(--rule);
+  font: 12px var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.formula-bar .fx {
+  font-style: italic;
+  font-weight: 700;
+  border-right: var(--rule);
+  padding-right: 10px;
+}
+.formula-bar .formula { color: var(--text); text-overflow: ellipsis; overflow: hidden; }
+.formula-bar .formula.idle { color: var(--muted); }
+
+.sheet { overflow-x: auto; }
+.sheet table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+.sheet th, .sheet td {
+  padding: 8px 9px;
+  border-bottom: var(--rule);
+  border-right: var(--rule);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.sheet th {
+  background: var(--bg-soft);
+  font: 400 11px/1.4 var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
+}
+/* Column letters and row numbers, as Sheets draws them: centred, grey, not selectable. */
+.sheet tr.cols th {
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  padding: 5px 9px;
+  user-select: none;
+}
+.sheet tr.cols th.col-target { color: var(--accent-strong); background: var(--accent-soft); }
+/* Row 1 is the package's own header row, inside the sheet rather than above it. */
+.sheet tr.hdr td { font-weight: 600; color: var(--text); background: color-mix(in srgb, var(--bg-soft) 55%, var(--bg)); }
+.sheet tr.hdr td.file, .sheet tr.hdr td.key, .sheet tr.hdr td.tag { color: var(--text); }
+.sheet td.locale { color: var(--accent-strong); background: var(--accent-soft); font-weight: 600; }
+.sheet th.rownum {
+  text-align: center;
+  font-size: 10.5px;
+  padding: 8px 4px;
+  user-select: none;
+  vertical-align: middle;
+}
+.sheet td.rownum { background: var(--bg-soft); border-right: var(--rule); }
+/* Row 1 carries the package's own headers, so it is bold inside the sheet, not a table head. */
+.sheet tr.hdr td { font-weight: 600; }
+.sheet tr.hdr td.out { color: var(--accent-strong); }
+.sheet td.file, .sheet td.key, .sheet td.tag { font: 11.5px/1.5 var(--mono); color: var(--muted); }
+.sheet td.key { color: var(--text); }
+.sheet tr:last-child td { border-bottom: 0; }
+.sheet col.c-num { width: 32px; }
+.sheet col.c-file { width: 18%; }
+.sheet col.c-key { width: 13%; }
+.sheet col.c-tag { width: 11%; }
+
+/* The cell the formula bar is talking about, outlined the way Sheets outlines a selection. */
+.sheet td.out.active { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.sheet td.out { background: color-mix(in srgb, var(--accent-soft) 55%, transparent); }
+.sheet td.out:empty::after { content: ""; display: block; height: 1.2em; }
+.sheet td.out.pending {
+  background: linear-gradient(90deg, var(--accent-soft) 25%, color-mix(in srgb, var(--accent) 22%, transparent) 50%, var(--accent-soft) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.1s linear infinite;
+}
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.sheet td.out.done { animation: land 0.35s ease-out; }
+@keyframes land {
+  from { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+  to { background: color-mix(in srgb, var(--accent-soft) 55%, transparent); }
+}
+
+.sheet tr.more td {
+  color: var(--muted);
+  font: 11.5px var(--mono);
+  background: var(--bg-soft);
+}
+.sheet tr.more td.rownum { border-right: var(--rule); }
+
+.locales {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 14px;
+  border-top: var(--rule);
+  background: var(--bg-soft);
+  margin-top: auto;
+}
+.locales .from { font: 11.5px var(--mono); color: var(--muted); }
+.locales .from b { color: var(--text); font-weight: 600; }
+.chip {
+  padding: 5px 13px;
+  border-radius: 999px;
+  border: var(--rule);
+  background: var(--bg);
+  font: 600 12px var(--mono);
+  color: var(--muted);
+  transition: transform 0.12s, background 0.15s, color 0.15s, border-color 0.15s;
+}
+.chip:hover { color: var(--text); border-color: var(--accent); }
+.chip:active { transform: translateY(1px); }
+.chip[aria-pressed="true"] { color: #fff; background: var(--accent-strong); border-color: var(--accent-strong); }
+
+.out-tabs {
+  display: flex;
+  border-bottom: var(--rule);
+  overflow-x: auto;
+}
+.out-tabs button {
+  border: 0;
+  border-right: var(--rule);
+  border-radius: 0;
+  padding: 11px 13px;
+  font: 11.5px var(--mono);
+  white-space: nowrap;
+  background: var(--bg-soft);
+}
+.out-tabs button[aria-selected="true"] { color: var(--text); background: var(--bg-code); }
+
+.out-code {
+  flex: 1;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  background: var(--bg-code);
+  font: 12.5px/1.75 var(--mono);
+  min-height: 250px;
+}
+.out-code .ln { display: block; white-space: pre-wrap; overflow-wrap: anywhere; }
+.out-code .ln.fresh { animation: fade-in 0.3s ease-out; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+.out-code .tok-key { color: var(--accent-strong); }
+.out-code .tok-str { color: var(--text); }
+.out-code .tok-punc, .out-code .tok-tag { color: var(--muted); }
+
+.demo-status {
+  grid-column: 1 / -1;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: var(--rule);
+  background: var(--bg-soft);
+  font: 11.5px var(--mono);
+  color: var(--muted);
+}
+/* The one dot on the page, and it reports real state: idle, running, finished. */
+.demo-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex: none; }
+.demo-status.busy .dot { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
+.demo-status.done .dot { background: var(--accent); }
+@keyframes pulse { 50% { opacity: 0.25; } }
+
+.demo-note { margin: 16px 0 0; max-width: 64ch; font-size: 13.5px; color: var(--muted); }
+
+/* ---------------------------------------------------------------- how it works */
+
+.steps { display: grid; gap: 0; }
+.step {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 24px;
+  padding: 22px 0;
+}
+.step + .step { border-top: var(--rule); }
+.step:first-child { padding-top: 0; }
+.step h3 {
+  margin: 0;
+  font: 600 14px/1.5 var(--mono);
+  color: var(--accent-strong);
+  letter-spacing: 0.02em;
+}
+.step > div { min-width: 0; }
+.step p { margin: 0; color: var(--ink-dim); font-size: 14.5px; max-width: 60ch; }
+.step p + p { margin-top: 9px; }
+.step code, .landing .say code, .feature code {
+  font: 0.87em var(--mono);
+  background: var(--bg-soft);
+  border: var(--rule);
+  padding: 0.08em 0.34em;
+  color: var(--text);
+}
+.step a { color: var(--accent-strong); }
+
+/* ---------------------------------------------------------------- features */
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: var(--rule);
+}
+.feature { padding: 24px; background: var(--bg); grid-column: span 2; }
+.feature.wide { grid-column: span 4; }
+.feature.tinted { background: var(--accent-soft); }
+.feature h3 { margin: 0 0 8px; font-size: 0.98rem; }
+.feature p { margin: 0; font-size: 14px; color: var(--ink-dim); max-width: 48ch; }
+
+/* The masking round trip, drawn with the real tokens the package uses. */
+.mask { margin: 18px 0 0; border: var(--rule); background: var(--bg-soft); }
+.mask div {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  padding: 9px 12px;
+  font: 12px/1.6 var(--mono);
+}
+.mask div + div { border-top: var(--rule); }
+.mask dt { color: var(--muted); margin: 0; }
+.mask dd { margin: 0; color: var(--text); overflow-wrap: anywhere; }
+.mask .tok { color: var(--muted); background: var(--bg); border: var(--rule); padding: 0.05em 0.3em; }
+
+/* ---------------------------------------------------------------- dashboard */
+
+.shot-frame { border: var(--rule); background: var(--bg-soft); }
+.shot-frame .bar {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 13px;
+  border-bottom: var(--rule);
+  font: 11.5px var(--mono);
+  color: var(--muted);
+}
+.shot-frame img { display: block; width: 100%; height: auto; }
+
+/* ---------------------------------------------------------------- get started */
+
+.start-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 40px;
+  align-items: start;
+}
+.start-grid .code { margin: 0 0 12px; border-radius: 0; }
+.start-grid .code:last-of-type { margin-bottom: 0; }
+/* A long credentials path should not need a sideways scroll to read on a phone. */
+.start-grid .code pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.spec { margin: 0; font-size: 13.5px; }
+.spec div { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; }
+.spec div + div { border-top: var(--rule); }
+.spec dt { color: var(--muted); }
+.spec dd { margin: 0; font: 12.5px var(--mono); color: var(--text); text-align: right; }
+
+.landing .footer {
+  max-width: none;
+  margin: 0;
+  padding: 26px 0 40px;
+  border-top: var(--rule);
+  font: 12.5px var(--mono);
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- motion */
+
+/* Hero entrance: the English line lands, then the translations arrive under it. */
+.js-reveal .hero > div > *,
+.js-reveal .fanout > * {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.js-reveal .hero > div > *:nth-child(1) { animation-delay: 0.04s; }
+.js-reveal .hero > div > *:nth-child(2) { animation-delay: 0.10s; }
+.js-reveal .hero > div > *:nth-child(3) { animation-delay: 0.16s; }
+.js-reveal .fanout > *:nth-child(1) { animation-delay: 0.20s; }
+.js-reveal .fanout > *:nth-child(2) { animation-delay: 0.26s; }
+.js-reveal .fanout > *:nth-child(3) { animation-delay: 0.36s; }
+.js-reveal .fanout > *:nth-child(4) { animation-delay: 0.44s; }
+.js-reveal .fanout > *:nth-child(5) { animation-delay: 0.52s; }
+.js-reveal .fanout > *:nth-child(6) { animation-delay: 0.60s; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* Sections settle in as they arrive, so the page reads top to bottom instead of all at once.
+   Gated on .js-reveal, which landing.js sets: without JavaScript nothing is ever hidden. */
+.js-reveal .reveal { opacity: 0; transform: translateY(14px); }
+.js-reveal .reveal.seen {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------------------------------------------------------------- responsive */
+
+@media (max-width: 1000px) {
+  .landing { --gut: 124px; }
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 56px 0 64px; }
+  .hero h1 { max-width: 15ch; }
+  .demo-frame { grid-template-columns: minmax(0, 1fr); }
+  .pane + .pane { border-left: 0; border-top: var(--rule); }
+  .start-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+@media (max-width: 720px) {
+  .landing { padding: 0 16px; }
+  .row { padding: 44px 0; }
+  .shell2 { grid-template-columns: minmax(0, 1fr); }
+  .index { display: none; }
+  .step { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .bento { grid-template-columns: minmax(0, 1fr); }
+  .feature, .feature.wide { grid-column: span 1; }
+  .install { width: 100%; }
+  .btn { flex: 1; justify-content: center; }
+  .sheet col.c-tag, .sheet th.tag, .sheet td.tag { display: none; }
+  .fanout .src, .fanout .dst { grid-template-columns: 44px minmax(0, 1fr); gap: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .hero > div > *, .js-reveal .fanout > * { opacity: 1; transform: none; animation: none; }
+  .atmosphere .grid { transform: none; opacity: 0.25; }
+  .sheet td.out.pending { animation: none; background: var(--accent-soft); }
+  .sheet td.out.done, .out-code .ln.fresh, .demo-status.busy .dot { animation: none; }
+  .js-reveal .reveal { opacity: 1; transform: none; }
+  .js-reveal .reveal.seen { transition: none; }
+  .btn, .chip { transition: none; }
+}

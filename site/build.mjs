@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { Marked } from 'marked';
 import sharp from 'sharp';
 import { createHighlighter } from 'shiki';
+import { renderLandingPage } from './landing.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const DOCS = join(ROOT, '..', 'docs');
@@ -16,9 +17,10 @@ const SITE_URL = 'https://sheet-i18n.momik.dev';
 const REPO_URL = 'https://github.com/PG-Momik/laravel-google-sheet-i18n';
 const PACKAGIST_URL = 'https://packagist.org/packages/momik/laravel-google-sheet-i18n';
 
-// Sidebar order. `file` is relative to docs/, `slug` is the URL path.
+// Sidebar order. `file` is relative to docs/, `slug` is the URL path. `/` is the landing page
+// (see landing.mjs), so the docs start one level down.
 const PAGES = [
-  { file: 'index.md', slug: '', nav: 'Overview' },
+  { file: 'index.md', slug: 'docs', nav: 'Overview' },
   { file: 'google-setup.md', slug: 'google-setup', nav: 'Google setup' },
   { file: 'installation.md', slug: 'installation', nav: 'Installation' },
   { file: 'usage.md', slug: 'usage', nav: 'Usage' },
@@ -44,10 +46,10 @@ const pageUrl = (slug) => (slug ? `/${slug}/` : '/');
 
 const images = new Map(); // "screenshots/x.png" -> { base, width, height }
 
-async function processImage(src) {
+async function processImage(src, baseOverride) {
   if (images.has(src)) return images.get(src);
   const input = join(DOCS, src);
-  const base = basename(src).replace(/\.\w+$/, '');
+  const base = baseOverride ?? basename(src).replace(/\.\w+$/, '');
   const { width, height } = await sharp(input).metadata();
   await mkdir(join(DIST, 'img'), { recursive: true });
   for (const w of IMAGE_WIDTHS) {
@@ -164,7 +166,8 @@ function layout({ page, title, description, html, headings }) {
   const pager = `<nav class="pager" aria-label="Pagination">${
     prev ? `<a class="prev" href="${pageUrl(prev.slug)}"><span>Previous</span>${escapeHtml(prev.nav)}</a>` : '<span></span>'
   }${next ? `<a class="next" href="${pageUrl(next.slug)}"><span>Next</span>${escapeHtml(next.nav)}</a>` : ''}</nav>`;
-  const fullTitle = page.slug ? `${title} · Laravel Google Sheets I18n` : 'Laravel Google Sheets I18n';
+  const SUFFIX = 'Laravel Google Sheets I18n';
+  const fullTitle = title === SUFFIX ? title : `${title} · ${SUFFIX}`;
 
   return `<!doctype html>
 <html lang="en">
@@ -236,6 +239,27 @@ for (const page of PAGES) {
 }
 if (docFiles.size) console.warn(`! not in the sidebar (add to PAGES): ${[...docFiles].join(', ')}`);
 
+const SHOT = 'screenshots/placeholder_image.png';
+const shotInfo = await processImage(SHOT, 'translation-manager');
+const shotW = Math.min(IMAGE_WIDTHS.at(-1), shotInfo.width);
+await writeFile(
+  join(DIST, 'index.html'),
+  renderLandingPage({
+    SITE_URL,
+    REPO_URL,
+    PACKAGIST_URL,
+    ICON_GITHUB,
+    THEME_SCRIPT,
+    highlight,
+    shot: {
+      base: shotInfo.base,
+      w: shotW,
+      h: Math.round((shotInfo.height * shotW) / shotInfo.width),
+    },
+  }),
+);
+console.log('\u2713 /  Landing');
+
 const notFound = {
   page: { file: 'index.md', slug: '404', nav: 'Not found' },
   title: 'Page not found',
@@ -246,9 +270,12 @@ const notFound = {
 await writeFile(join(DIST, '404.html'), layout(notFound).replace(/<link rel="canonical"[^>]*>\n/, ''));
 await writeFile(
   join(DIST, 'sitemap.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${PAGES.map(
-    (p) => `  <url><loc>${SITE_URL}${pageUrl(p.slug)}</loc></url>`,
-  ).join('\n')}\n</urlset>\n`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[
+    '',
+    ...PAGES.map((p) => p.slug),
+  ]
+    .map((slug) => `  <url><loc>${SITE_URL}${pageUrl(slug)}</loc></url>`)
+    .join('\n')}\n</urlset>\n`,
 );
 await writeFile(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 console.log(`✓ ${images.size} images → WebP (${IMAGE_WIDTHS.join('/')}px)`);
