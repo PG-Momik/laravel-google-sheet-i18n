@@ -17,37 +17,43 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1117;
-    --bg-soft: #151b23;
-    --bg-code: #151b23;
-    --text: #e6edf3;
-    --muted: #9198a1;
-    --border: #30363d;
+    --bg: #1a1a1a;
+    --bg-soft: #242424;
+    --bg-code: #1f1f1f;
+    --text: #e0e0e0;
+    --muted: #a0a0a0;
+    --border: #333333;
     --accent: #3fb950;
     --accent-strong: #56d364;
-    --accent-soft: #12261e;
+    --accent-soft: #1b2a1f;
     --shadow: 0 1px 3px rgb(0 0 0 / 0.4);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #0d1117;
-  --bg-soft: #151b23;
-  --bg-code: #151b23;
-  --text: #e6edf3;
-  --muted: #9198a1;
-  --border: #30363d;
+  --bg: #1a1a1a;
+  --bg-soft: #242424;
+  --bg-code: #1f1f1f;
+  --text: #e0e0e0;
+  --muted: #a0a0a0;
+  --border: #333333;
   --accent: #3fb950;
   --accent-strong: #56d364;
-  --accent-soft: #12261e;
+  --accent-soft: #1b2a1f;
   --shadow: 0 1px 3px rgb(0 0 0 / 0.4);
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 
-html { scroll-padding-top: calc(var(--topbar-h) + 16px); }
+html {
+  scroll-padding-top: calc(var(--topbar-h) + 16px);
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 
 body {
   margin: 0;
