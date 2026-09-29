@@ -261,13 +261,22 @@ button:hover { color: var(--text); }
 .pager span { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
 .pager .next { text-align: right; margin-left: auto; }
 
+.page-edit {
+  max-width: 760px;
+  margin-top: 40px;
+  font-size: 13px;
+  text-align: right;
+}
+
+.page-edit a { color: var(--muted); }
+
 .footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 8px;
   max-width: 760px;
-  margin-top: 40px;
+  margin-top: 12px;
   padding-top: 20px;
   border-top: 1px solid var(--border);
   font-size: 13px;

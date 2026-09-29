@@ -199,9 +199,12 @@ function layout({ page, title, description, html, headings }) {
   <main id="content" class="content">
     <article class="prose">${html}</article>
     ${pager}
-    <footer class="footer">
+    <div class="page-edit">
       <a href="${REPO_URL}/edit/main/docs/${page.file}" target="_blank" rel="noopener">Edit this page on GitHub</a>
-      <span>&copy; 2026 <a href="https://momik.dev" target="_blank" rel="noopener">Momik Shrestha</a>. Built with purpose.</span>
+    </div>
+    <footer class="footer">
+      <span>Built with purpose</span>
+      <span><a href="https://momik.dev" target="_blank" rel="noopener">Momik Shrestha</a></span>
     </footer>
   </main>
   ${toc}

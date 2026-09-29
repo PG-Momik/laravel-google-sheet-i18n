@@ -137,8 +137,9 @@
 
     <!-- Simple Footer -->
     <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center text-xs text-gray-400">
-            <p>&copy; 2026 Momik Shrestha. Built with purpose.</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between gap-x-4 gap-y-1 text-xs text-gray-400">
+            <span>Built with purpose</span>
+            <span><a href="https://momik.dev" target="_blank" rel="noopener" class="hover:text-gray-600">Momik Shrestha</a></span>
         </div>
     </footer>
 
